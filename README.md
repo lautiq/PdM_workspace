@@ -7,3 +7,4 @@ En las definiciones de los pines se observa:
 - LED1: LED externo conectado en GPIO_PIN_6
 - LED2: LED de la placa llamado LD2 correspondiente a GPIO_PIN_5
 - LED3: LED externo conectado en GPIO_PIN_7
+ 
