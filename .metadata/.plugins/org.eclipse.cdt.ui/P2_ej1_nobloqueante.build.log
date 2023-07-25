@@ -1,4 +1,4 @@
-22:19:47 **** Incremental Build of configuration Debug for project P2_ej1_nobloqueante ****
+20:39:13 **** Build of configuration Debug for project P2_ej1_nobloqueante ****
 make -j16 all 
 arm-none-eabi-size   P2_ej1_nobloqueante.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size   P2_ej1_nobloqueante.elf
 Finished building: default.size.stdout
  
 
-22:19:48 Build Finished. 0 errors, 0 warnings. (took 250ms)
+20:39:14 Build Finished. 0 errors, 0 warnings. (took 297ms)
 

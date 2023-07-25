@@ -1,0 +1,27 @@
+/*
+ * API_debounce.c
+ *
+ *  Created on: Jul 13, 2023
+ *      Author: lauta
+ */
+
+
+#include "API_debounce.h"
+
+
+
+
+void debounceFSM_init()
+{
+	if(!HAL_GPIO_ReadPin(GPIOx, GPIO_Pin))
+
+	initState = BUTTON_UP;
+}
+
+
+
+void debounceFSM_update()
+{
+
+}
+
