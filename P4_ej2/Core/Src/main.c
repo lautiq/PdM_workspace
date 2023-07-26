@@ -20,26 +20,20 @@
 #include "API_delay.h"
 #include "API_debounce.h"
 
+#define LONG_PERIOD_MS 500
+#define SHORT_PERIOD_MS 100
+#define START_PERIOD 0
+
+delay_t toggleFrequency;
+uint32_t actualFrequency = SHORT_PERIOD_MS;
+
+
 UART_HandleTypeDef huart2;
 
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
-
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 
 
 
@@ -61,27 +55,35 @@ int main(void)
   BSP_LED_Init(LED1); // LED amarillo
   BSP_LED_Init(LED2); // LED incorporado
   BSP_LED_Init(LED3); // LED verde
+  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
-
+  //Iniciamos en el primer estado:
+  debounceFSM_init();
+  delayInit(&toggleFrequency, START_PERIOD);
 
 
   while (1)
   {
+	  debounceFSM_update();
 
+	  if(delayRead(&toggleFrequency))
+	  {
+			  if(readKey())
+		  {
+			  if(actualFrequency == SHORT_PERIOD_MS)
+			  {
+				  actualFrequency = LONG_PERIOD_MS;
+			  } else {
+				  actualFrequency = SHORT_PERIOD_MS;
+			  }
+
+		  }
+			  BSP_LED_Toggle(LED2);
+			  delayWrite(&toggleFrequency, actualFrequency);
+	  }
 
   }
-
-
-
-
-  void buttonPressed()
-  {
-
-  }
-  void buttonReleased()
-  {
-
-  }
+}
 
 void SystemClock_Config(void)
 {
