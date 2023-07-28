@@ -1,0 +1,5 @@
+API_uart.c:17:6:uartInit	2
+API_uart.c:36:6:uartSendString	1
+API_uart.c:44:6:uartSendStringSize	1
+API_uart.c:52:6:uartReceiveStringSize	1
+API_uart.c:59:13:printUARTConfig	1
