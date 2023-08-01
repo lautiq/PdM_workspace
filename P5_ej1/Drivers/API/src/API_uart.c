@@ -17,7 +17,7 @@ static void printUARTConfig();
 bool uartInit()
 {
 	uartHandle.Instance = USART2;
-	uartHandle.Init.BaudRate = 9600;
+	uartHandle.Init.BaudRate = 115200;
 	uartHandle.Init.WordLength = UART_WORDLENGTH_8B;
 	uartHandle.Init.StopBits = UART_STOPBITS_1;
 	uartHandle.Init.Parity = UART_PARITY_EVEN;
