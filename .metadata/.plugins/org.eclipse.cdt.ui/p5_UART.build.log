@@ -1,0 +1,30 @@
+16:14:22 **** Incremental Build of configuration Debug for project p5_UART ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:103:31: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  103 |    HAL_UART_Transmit(&huart2, "Hola Mundo", sizeof("Hola Mundo"), 0xFFFF);
+      |                               ^~~~~~~~~~~~
+      |                               |
+      |                               char *
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:411,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:29,
+                 from ../Core/Inc/main.h:30,
+                 from ../Core/Src/main.c:20:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:722:79: note: expected 'const uint8_t *' {aka 'const unsigned char *'} but argument is of type 'char *'
+  722 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                ~~~~~~~~~~~~~~~^~~~~
+arm-none-eabi-gcc -o "p5_UART.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\lauta\Desktop\CESE\Materias\PdM\PdM_workspace\p5_UART\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="p5_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: p5_UART.elf
+ 
+arm-none-eabi-size   p5_UART.elf 
+arm-none-eabi-objdump -h -S  p5_UART.elf  > "p5_UART.list"
+   text	   data	    bss	    dec	    hex	filename
+   8272	     20	   1636	   9928	   26c8	p5_UART.elf
+Finished building: default.size.stdout
+ 
+Finished building: p5_UART.list
+ 
+
+16:14:23 Build Finished. 0 errors, 1 warnings. (took 598ms)
+

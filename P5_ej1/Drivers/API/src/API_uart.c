@@ -20,9 +20,10 @@ bool uartInit()
 	uartHandle.Init.BaudRate = 115200;
 	uartHandle.Init.WordLength = UART_WORDLENGTH_8B;
 	uartHandle.Init.StopBits = UART_STOPBITS_1;
-	uartHandle.Init.Parity = UART_PARITY_EVEN;
+	uartHandle.Init.Parity = UART_PARITY_NONE;
 	uartHandle.Init.Mode = UART_MODE_TX_RX;
 	uartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+
 
 	if (HAL_UART_Init(&uartHandle) != HAL_OK)
 	{
