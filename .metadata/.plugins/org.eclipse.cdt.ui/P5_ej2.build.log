@@ -1,0 +1,10 @@
+17:14:11 **** Incremental Build of configuration Debug for project P5_ej2 ****
+make -j16 all 
+arm-none-eabi-size   P5_ej2.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12376	    140	   1692	  14208	   3780	P5_ej2.elf
+Finished building: default.size.stdout
+ 
+
+17:14:12 Build Finished. 0 errors, 0 warnings. (took 234ms)
+
