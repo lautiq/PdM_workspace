@@ -4,6 +4,17 @@ Este proyecto es una implementación en C para la placa de desarrollo STM32F401 
 La aplicacion de esta practica se basa en implementar un módulo de software sencillo para trabajar con la UART.
 Se realizo en formato API dentro de la carpeta drivers.
 
+Se implementaron las siguientes funciones: 
+- bool uartInit();
+- void uartSendString(uint8_t* pstring);
+- void uartSendStringSize(uint8_t* pstring, uint16_t size);
+- void uartReceiveStringSize(uint8_t* pstring, uint16_t size);
+
+Al probar este programa se inicializa la uart y se recibirá el siguiente mensaje si esta todo bien:
+![image](https://github.com/lautiq/PdM_workspace/assets/110248182/68ec514f-6f0d-49ed-bb89-ae42ab9be05b)
+
+
+
 ## Dependencias
 
 - STM32 CubeIDE
