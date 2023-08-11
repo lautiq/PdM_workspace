@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;TP_PCSE/P3_ej1_mod.ioc&apos; to &apos;TP_PCSE.ioc&apos;" description="Rename resource &apos;P3_ej1_mod.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="P3_ej1_mod.ioc" name="TP_PCSE.ioc" stamp="1691788920273" updateReferences="true"/>
+</session>
