@@ -8,20 +8,20 @@
 #ifndef API_INC_API_SSD1306_H_
 #define API_INC_API_SSD1306_H_
 
+#include "main.h"
 #include <stddef.h>
-#include <_ansi.h>
-#include "string.h"
-#include <stdio.h>
+#include "string.h"		//Needed for message buffer "memset"
 #include "stm32f4xx_hal.h" // Needed for I2C.
 #include "API_SSD1306_Fonts.h" //Needed for bit maps.
-#include "main.h"
+
+
 /*
  *	I2C configuration
  */
 #define SSD1306_I2C_PORT hi2c1
-#define SSD1306_I2C_ADDR (0x3C << 1) //Written on the back of the display.
+#define SSD1306_I2C_ADDR (0x3C << 1) 		//Written on the back of the display.
 
-extern I2C_HandleTypeDef SSD1306_I2C_PORT; //Already defined by ioc in main.c
+extern I2C_HandleTypeDef SSD1306_I2C_PORT;	//Already defined by ioc in main.c
 
 
 /*
@@ -32,20 +32,19 @@ extern I2C_HandleTypeDef SSD1306_I2C_PORT; //Already defined by ioc in main.c
 #define SSD1306_BUFFER_SIZE (SSD1306_WIDTH * SSD1306_HEIGHT / 8)
 
 typedef enum {
-	Black = 0x00,   //It's no pixel
-	White = 0x01	//one point
+	Black = 0x00,   //No pixel
+	White = 0x01	//One point
 } SSD1306_COLOR;
 
 typedef struct {
 	uint16_t CurrentX;
 	uint16_t CurrentY;
 	uint8_t Initialized;
-	uint8_t DisplayOn;
 }SSD1306_t;
 
 
 /*
- *	DATASHEET COMMANDS (not all of them will be used in this project).
+ *	DATASHEET COMMANDS (some of them repeat, but it's ok);
  */
 
   // Command definition
@@ -89,24 +88,18 @@ typedef struct {
   #define INIT_STATUS               0xFF
 
 
+
 /*
  * Definitions
  */
-void ssd1306_Init(void);
-void ssd1306_Fill(SSD1306_COLOR color);
-void ssd1306_UpdateScreen();
-void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
-char ssd1306_WriteChar(char character, SSD1306_COLOR color);
-char ssd1306_WriteString(char* string, SSD1306_COLOR color);
-void ssd1306_SetCursor(uint8_t x, uint8_t y);
+void oledInit(void);
+void cleanScreen(SSD1306_COLOR color);
+void updateScreen();
+void setPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
+char WriteChar(char character, SSD1306_COLOR color);
+char oledWriteString(char* string, SSD1306_COLOR color);
+void oledSetCursor(uint8_t x, uint8_t y);
 
-/*
- * Reusable code for various functions
- */
-
-void ssd1306_SetDisplayOn(const uint8_t on);
-void ssd1306_WriteCommand(uint8_t byte);
-void ssd1306_WriteData(uint8_t* buffer, size_t buff_size);
 
 
 

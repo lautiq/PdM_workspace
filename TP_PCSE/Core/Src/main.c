@@ -33,6 +33,10 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+// Define constants for delay times
+#define WELCOME_DISPLAY_DELAY_MS 3500
+#define COUNTER_UPDATE_DELAY_MS 1000
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -61,6 +65,48 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+// Initialize OLED screen and display welcome message
+static void initializeOLED() {
+    oledInit();
+    oledSetCursor(0, 0);
+    updateScreen();
+
+	  //Display a initialization message:
+	  oledWriteString("Welcome to:", White);
+	  oledSetCursor(0,20);
+	  oledWriteString("OLED DRIVER DEMO!", White);
+	  oledSetCursor(50,40);
+	  oledWriteString(":D",White);
+	  updateScreen();
+
+	  //After two seconds, clear the screen:
+	HAL_Delay(WELCOME_DISPLAY_DELAY_MS);
+	cleanScreen(Black);
+	updateScreen();
+}
+
+// Display counter value on OLED screen
+static void displayCounter(uint16_t counter)
+{
+
+	//Create a buffer to hold the message:
+	char msg[20];
+	//Clear the message buffer:
+	memset(msg, 0, sizeof(msg));
+
+	//Set title:
+	oledSetCursor(40,0);
+	oledWriteString("Counter", White);
+	oledSetCursor(20, 10);
+	oledWriteString("Demonstration", White);
+	//Create a message with the counter value:
+	 sprintf(msg, "Count: %d", counter);
+
+	 //Set the cursor position and print the message:
+	 oledSetCursor(0,40);
+	 oledWriteString(msg,White);
+	 updateScreen();
+}
 
 /* USER CODE END 0 */
 
@@ -71,10 +117,7 @@ static void MX_I2C1_Init(void);
 int main(void)
 {
 		  /* USER CODE BEGIN 1 */
-			//Create a buffer to hold the message:
-			char msg[20];
-			//Counter variable:
-			uint16_t counter = 0;
+	  	  uint16_t counter = 0;
 
 		  /* USER CODE END 1 */
 
@@ -98,25 +141,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_I2C1_Init();
-		  /* USER CODE BEGIN 2 */
-		  ssd1306_Init();
-		  ssd1306_SetCursor(0, 0);
-		  ssd1306_UpdateScreen();
 
-		  //Display a initialization message:
-		  ssd1306_WriteString("Welcome to:", White);
-		  ssd1306_SetCursor(0,20);
-		  ssd1306_WriteString("OLED DRIVER DEMO!", White);
-		  ssd1306_SetCursor(50,40);
-		  ssd1306_WriteString(":D",White);
-		  ssd1306_UpdateScreen();
-
-		  HAL_Delay(3500);
-
-		  //After two seconds, clear the screen:
-		  ssd1306_Fill(Black);
-		  ssd1306_UpdateScreen();
-
+  	  	  /* USER CODE BEGIN 2 */
+  	  	  	  initializeOLED();
 		  /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -124,27 +151,13 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	 displayCounter(counter);
     /* USER CODE BEGIN 3 */
-	  //Clear the message buffer:
-	  memset(msg, 0, sizeof(msg));
-	  //Set title:
-	  ssd1306_SetCursor(40,0);
-	  ssd1306_WriteString("Counter", White);
-	  ssd1306_SetCursor(20, 10);
-	  ssd1306_WriteString("Demonstration", White);
-	  //Create a message with the counter value:
-	  sprintf(msg, "Count: %d", counter);
-
-	  //Set the cursor position and print the message:
-	  ssd1306_SetCursor(0,40);
-	  ssd1306_WriteString(msg,White);
-	  ssd1306_UpdateScreen();
 
 	  //Increment the counter
 	  counter++;
 	  //Delay for a second:
-	  HAL_Delay(1000);
+	  HAL_Delay(COUNTER_UPDATE_DELAY_MS);
   }
   /* USER CODE END 3 */
 }
