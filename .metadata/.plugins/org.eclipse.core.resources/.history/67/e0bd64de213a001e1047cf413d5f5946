@@ -70,13 +70,10 @@ static void MX_I2C1_Init(void);
   */
 int main(void)
 {
-		  /* USER CODE BEGIN 1 */
-			//Create a buffer to hold the message:
-			char msg[20];
-			//Counter variable:
-			uint16_t counter = 0;
-
-		  /* USER CODE END 1 */
+  /* USER CODE BEGIN 1 */
+	char Text[] = "Hola!";
+	char retVal;
+  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -98,26 +95,11 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_I2C1_Init();
-		  /* USER CODE BEGIN 2 */
-		  ssd1306_Init();
-		  ssd1306_SetCursor(0, 0);
-		  ssd1306_UpdateScreen();
-
-		  //Display a initialization message:
-		  ssd1306_WriteString("Welcome to:", White);
-		  ssd1306_SetCursor(0,20);
-		  ssd1306_WriteString("OLED DRIVER DEMO!", White);
-		  ssd1306_SetCursor(50,40);
-		  ssd1306_WriteString(":D",White);
-		  ssd1306_UpdateScreen();
-
-		  HAL_Delay(3500);
-
-		  //After two seconds, clear the screen:
-		  ssd1306_Fill(Black);
-		  ssd1306_UpdateScreen();
-
-		  /* USER CODE END 2 */
+  /* USER CODE BEGIN 2 */
+  ssd1306_Init();
+  ssd1306_SetCursor(0, 0);
+  ssd1306_UpdateScreen();
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -125,26 +107,8 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
+
     /* USER CODE BEGIN 3 */
-	  //Clear the message buffer:
-	  memset(msg, 0, sizeof(msg));
-	  //Set title:
-	  ssd1306_SetCursor(40,0);
-	  ssd1306_WriteString("Counter", White);
-	  ssd1306_SetCursor(20, 10);
-	  ssd1306_WriteString("Demonstration", White);
-	  //Create a message with the counter value:
-	  sprintf(msg, "Count: %d", counter);
-
-	  //Set the cursor position and print the message:
-	  ssd1306_SetCursor(0,40);
-	  ssd1306_WriteString(msg,White);
-	  ssd1306_UpdateScreen();
-
-	  //Increment the counter
-	  counter++;
-	  //Delay for a second:
-	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }

@@ -106,12 +106,9 @@ int main(void)
 		  //Display a initialization message:
 		  ssd1306_WriteString("Welcome to:", White);
 		  ssd1306_SetCursor(0,20);
-		  ssd1306_WriteString("OLED DRIVER DEMO!", White);
-		  ssd1306_SetCursor(50,40);
-		  ssd1306_WriteString(":D",White);
+		  ssd1306_WriteString("OLED DEMO!", White);
 		  ssd1306_UpdateScreen();
-
-		  HAL_Delay(3500);
+		  HAL_Delay(2000);
 
 		  //After two seconds, clear the screen:
 		  ssd1306_Fill(Black);
@@ -127,17 +124,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  //Clear the message buffer:
-	  memset(msg, 0, sizeof(msg));
-	  //Set title:
-	  ssd1306_SetCursor(40,0);
-	  ssd1306_WriteString("Counter", White);
-	  ssd1306_SetCursor(20, 10);
-	  ssd1306_WriteString("Demonstration", White);
+	  memset(msg, 0, sizeof(message));
 	  //Create a message with the counter value:
 	  sprintf(msg, "Count: %d", counter);
 
 	  //Set the cursor position and print the message:
-	  ssd1306_SetCursor(0,40);
+	  ssd1306_SetCursor(0,0);
 	  ssd1306_WriteString(msg,White);
 	  ssd1306_UpdateScreen();
 

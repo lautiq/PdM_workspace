@@ -10,8 +10,6 @@
 
 #include <stddef.h>
 #include <_ansi.h>
-#include "string.h"
-#include <stdio.h>
 #include "stm32f4xx_hal.h" // Needed for I2C.
 #include "API_SSD1306_Fonts.h" //Needed for bit maps.
 #include "main.h"
