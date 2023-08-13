@@ -1,0 +1,43 @@
+/*
+ * API_SSD1306.c
+ *
+ *  Created on: Aug 05, 2023
+ *      Author: Lautaro Quarin
+ */
+
+
+#include "API_SSD1306.h"
+
+static I2C_HandleTypeDef *hi2c;
+
+void SSD1306_Init(I2C_HandleTypeDef *i2c){
+	hi2c = i2c;
+	//Agregar inicializacion
+}
+
+void SSD1306_SendCommand(uint8_t command)
+{
+    uint8_t buffer[2];
+    buffer[0] = SSD1306_COMMAND_STREAM;
+    buffer[1] = command;
+    HAL_I2C_Master_Transmit(hi2c, SSD1306_I2C_ADDR, buffer, 2, HAL_MAX_DELAY);
+}
+
+void SSD1306_SendData(uint8_t data)
+{
+    uint8_t buffer[2];
+    buffer[0] = SSD1306_DATA_STREAM;
+    buffer[1] = data;
+    HAL_I2C_Master_Transmit(hi2c, SSD1306_I2C_ADDR, buffer, 2, HAL_MAX_DELAY);
+}
+
+void SSD1306_SetCursor(uint8_t column, uint8_t page)
+{
+    // Implementa la función para establecer la posición del cursor.
+    SSD1306_SendCommand(SSD1306_SET_COLUMN_ADDR);
+    SSD1306_SendCommand(column);
+    SSD1306_SendCommand(column + 127); // Establece la posición de columna final
+    SSD1306_SendCommand(SSD1306_SET_PAGE_ADDR);
+    SSD1306_SendCommand(page);
+    SSD1306_SendCommand(SSD1306_SEG_REMAP);
+}

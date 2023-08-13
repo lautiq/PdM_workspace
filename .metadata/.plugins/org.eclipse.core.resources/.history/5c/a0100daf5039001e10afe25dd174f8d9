@@ -1,0 +1,77 @@
+/*
+ * API_SSD1306.c
+ *
+ *  Created on: Aug 05, 2023
+ *      Author: Lautaro Quarin
+ */
+
+
+#include "API_SSD1306.h"
+
+static I2C_HandleTypeDef *hi2c;
+
+void SSD1306_Init(I2C_HandleTypeDef *i2c){
+	hi2c = i2c;
+	//Agregar inicializacion
+}
+
+void SSD1306_SendCommand(uint8_t command)
+{
+    uint8_t buffer[2];
+    buffer[0] = SSD1306_COMMAND_STREAM;
+    buffer[1] = command;
+    HAL_I2C_Master_Transmit(hi2c, SSD1306_I2C_ADDR, buffer, 2, HAL_MAX_DELAY);
+}
+
+void SSD1306_SendData(uint8_t data)
+{
+    uint8_t buffer[2];
+    buffer[0] = SSD1306_DATA_STREAM;
+    buffer[1] = data;
+    HAL_I2C_Master_Transmit(hi2c, SSD1306_I2C_ADDR, buffer, 2, HAL_MAX_DELAY);
+}
+
+void SSD1306_SetCursor(uint8_t column, uint8_t page) {
+    // Establecer la dirección de memoria horizontal (HORIZONTAL MODE)
+    SSD1306_SendCommand(SSD1306_MEMORY_ADDR_MODE);
+    SSD1306_SendCommand(0x00); // Horizontal Addressing Mode
+
+    // Establecer la posición de columna
+    SSD1306_SendCommand(SSD1306_SET_COLUMN_ADDR);
+    SSD1306_SendCommand(column);                    // Start column
+    SSD1306_SendCommand(column + 127);              // End column (128 columns in total)
+
+    // Establecer la posición de página (page)
+    SSD1306_SendCommand(SSD1306_SET_PAGE_ADDR);
+    SSD1306_SendCommand(page);                       // Start page
+    SSD1306_SendCommand(page + 7);                   // End page (8 pages in total)
+
+    // Establecer la dirección de memoria vertical (PAGE ADDRESSING MODE)
+    SSD1306_SendCommand(SSD1306_MEMORY_ADDR_MODE);
+    SSD1306_SendCommand(0x02); // Page Addressing Mode
+}
+
+
+void SSD1306_UpdateDisplay(void) {
+    // En esta función, supongamos que tienes un búfer llamado "displayBuffer" que contiene los datos a mostrar.
+
+    // Establecer la posición de inicio para escribir en el display
+    SSD1306_SendCommand(SSD1306_SET_COLUMN_ADDR);
+    SSD1306_SendCommand(0);
+    SSD1306_SendCommand(127);
+
+    SSD1306_SendCommand(SSD1306_SET_PAGE_ADDR);
+    SSD1306_SendCommand(0);
+    SSD1306_SendCommand(7);
+
+    // Enviar los datos del búfer al OLED
+    for (uint16_t page = 0; page < 8; ++page) {
+        SSD1306_SendData(SSD1306_DATA_STREAM); // Indicar que se enviarán datos
+
+        for (uint16_t column = 0; column < 128; ++column) {
+            // Obtener el byte correspondiente del búfer y enviarlo al OLED
+            uint16_t index = page * 128 + column;
+            SSD1306_SendData(displayBuffer[index]);
+        }
+    }
+}

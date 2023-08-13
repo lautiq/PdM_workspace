@@ -1,3 +1,0 @@
-API_delay.c:12:6:delayInit	1
-API_delay.c:20:8:delayRead	3
-API_delay.c:41:6:delayWrite	1

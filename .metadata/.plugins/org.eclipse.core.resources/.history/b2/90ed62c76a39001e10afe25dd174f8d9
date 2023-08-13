@@ -1,0 +1,16 @@
+/*
+ * API_SSD1306_Fonts.h
+ *
+ *  Created on:ago. 2023
+ *      Author: lauta
+ */
+
+#ifndef API_INC_API_SSD1306_FONTS_H_
+#define API_INC_API_SSD1306_FONTS_H_
+
+#include <stdint.h>
+
+extern const uint8_t Font_7x10[];
+
+
+#endif /* API_INC_API_SSD1306_FONTS_H_ */

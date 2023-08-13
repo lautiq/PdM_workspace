@@ -1,0 +1,19 @@
+/*
+ * API_SSD1306.c
+ *
+ *  Created on: Aug 05, 2023
+ *      Author: Lautaro Quarin
+ */
+
+
+#include "API_SSD1306.h"
+
+static I2C_HandleTypeDef *hi2c;
+
+void SSD1306_Init(I2C_HandleTypeDef *i2c){
+	hi2c = i2c;
+	//Agregar inicializacion
+}
+
+
+
