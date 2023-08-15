@@ -1,6 +1,6 @@
 # SSD1306 OLED Driver for STM32
 
-(![OLED Display 128x64](https://github.com/lautiq/PdM_workspace/assets/110248182/1b9091c5-a636-41e7-ba5c-13f7742862a1)
+![OLED Display 128x64](https://github.com/lautiq/PdM_workspace/assets/110248182/1b9091c5-a636-41e7-ba5c-13f7742862a1)
 
 This repository contains a driver for controlling SSD1306 OLED displays on the STM32F401RE microcontroller. The driver is designed for the final project for the asignature "PCSE". 
 
