@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="0xDB"/>
+		<item key="selection" value="counter"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="0xdb"/>
-			<item value="SSD1306_SET_MUX_RATIO"/>
-			<item value="set"/>
-			<item value="0xA6"/>
-			<item value="0xA"/>
-			<item value="0xA1"/>
-			<item value="0xFF"/>
-			<item value="col"/>
-			<item value="0xc8"/>
-			<item value="page"/>
-			<item value="0xB0"/>
-			<item value="0x40"/>
-			<item value="SSD1306_COMMAND_STREAM"/>
-			<item value="0x00"/>
-			<item value="0xaf"/>
+			<item value="counter"/>
+			<item value="update"/>
+			<item value="ssd1306_SetCursor"/>
+			<item value="ssd1306_WriteString"/>
+			<item value="ssd1306_WriteChar"/>
+			<item value="ssd1306_DrawPixel"/>
+			<item value="ssd1306_UpdateScreen"/>
+			<item value="ssd1306_Init"/>
+			<item value="ssd1306_Init}"/>
+			<item value="ssd1306_Fill"/>
+			<item value="SetDis"/>
+			<item value="ssd1306_SetDisplayOn"/>
+			<item value="ssd1306_WriteData"/>
+			<item value="WriteData"/>
+			<item value="ssd1306_WriteCommand"/>
 		</list>
 		<list key="replacehistory">
+			<item value="WriteData"/>
+			<item value=""/>
+			<item value="WriteCommand"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="795"/>
-		<item key="DIALOG_Y_ORIGIN" value="357"/>
+		<item key="DIALOG_X_ORIGIN" value="1354"/>
+		<item key="DIALOG_Y_ORIGIN" value="271"/>
 		<item key="DIALOG_WIDTH" value="414"/>
 		<item key="DIALOG_HEIGHT" value="454"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 	</section>
 </section>
