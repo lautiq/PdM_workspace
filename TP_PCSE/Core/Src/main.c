@@ -65,6 +65,7 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 // Initialize OLED screen and display welcome message
 static void initializeOLED() {
     oledInit();

@@ -221,6 +221,12 @@ char WriteChar(char character, SSD1306_COLOR color)
 
 }
 
+/**
+ * @brief Writes a string of characters on the screen.
+ * @param string String of characters to write.
+ * @param color Color of the string.
+ * @return The first character that couldn't be written or the last character if all were written successfully.
+ */
 char oledWriteString(char* string, SSD1306_COLOR color)
 {
 	while(*string)
@@ -236,7 +242,11 @@ char oledWriteString(char* string, SSD1306_COLOR color)
 }
 
 
-
+/**
+ * @brief Sets the cursor position on the screen.
+ * @param x Horizontal cursor coordinate.
+ * @param y Vertical cursor coordinate.
+ */
 void oledSetCursor(uint8_t x, uint8_t y){
 	SSD1306.CurrentX = x;
 	SSD1306.CurrentY = y;
