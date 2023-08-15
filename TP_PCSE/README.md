@@ -72,16 +72,16 @@ int main(void)
 .
 ├── drivers
 │   ├── API
-│   │   ├── inc
-│   │   │   └── API_SSD1306.h
-│   │   └── src
-│   │       └── API_SSD1306.c
-│   └── images
-│       ├── oled_display.jpg
-│       └── circuit_diagram.png
+│      ├── inc
+│      │   ├── API_SSD1306.h
+│      │     └── API_SSD1306_Fonts.h
+│      └── src
+│            └── API_SSD1306.c
+│            └── API_SSD1306_Fonts.c
 ├── examples
 │   └── main.c
-└── README.md
+└── README.md  
+
 
 ```
 
