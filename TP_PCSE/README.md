@@ -9,6 +9,7 @@ This repository contains a driver for controlling SSD1306 OLED displays on the S
 - [Overview](#overview)
 - [Features](#features)
 - [Hardware](#hardware)
+- [Dependencies](#dependencies)
 - [Usage](#usage)
 - [Directory Structure](#directory-structure)
 - [Functions Description](#function-description)
@@ -32,6 +33,11 @@ In order to use this project you will need the following components:
 
 - STM32F401RE microcontroller
 - SSD1306 OLED display
+
+## Dependencies
+
+- STM32 CubeIDE
+- STM32 HAL Library
 
 ## Usage
 
