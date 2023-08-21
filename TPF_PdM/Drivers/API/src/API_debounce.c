@@ -1,23 +1,13 @@
 /**
-  ******************************************************************************
-  * @file           : APIDebounce.c
-  * @brief          : Implementación de funciones para el manejo de anti-rebote
-  *                   utilizando una MEF (Máquina de Estados Finitos) y la BSP
-  *                   (Board Support Package) para la lectura del botón.
-  *
-  *
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) [13-07-2023] [Lauta]
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ * @file APIDebounce.c
+ * @brief Implementation of functions for debounce handling using a Finite State Machine (FSM).
+ *
+ * @details This file provides the implementation of functions for handling button debounce
+ *          using a FSM (Finite State Machine) and Board Support Package (BSP) for button reading.
+ *
+ * @date July 13, 2023
+ * @author Lautaro Quarin
+ */
 
 
 /* Includes ------------------------------------------------------------------*/
@@ -31,17 +21,17 @@
 
 /* Public functions ----------------------------------------------------------*/
 /**
- * @brief  Inicializa la MEF de anti-rebote.
+ * @brief Initializes the debounce FSM for a button.
  *
- * @note   Esta función inicializa la Máquina de Estados Finitos (MEF) utilizada
- *         para el anti-rebote del botón. Debe ser llamada al inicio del programa
- *         antes de utilizar las funciones de anti-rebote.
+ * @note This function initializes the Finite State Machine (FSM) used for button debounce.
+ *       It should be called at the beginning of the program before using debounce functions.
  *
- * @note   Si el botón está presionado al momento de iniciar el programa, se activará
- *         la función de error y el LED incorporado se encenderá. El programa quedará
- *         bloqueado en este estado hasta que se reinicie.
+ * @note If the button is pressed when the program starts, the error handling function
+ *       will be activated, and the built-in LED will be turned on. The program will remain
+ *       in this state until restarted.
  *
- * @retval None
+ * @param button Pointer to the debounceButton_t structure.
+ * @return None.
  */
 void debounceFSM_init(debounceButton_t *button)
 {
@@ -56,14 +46,16 @@ void debounceFSM_init(debounceButton_t *button)
 }
 
 
+
 /**
- * @brief  Actualiza la MEF de anti-rebote periódicamente.
+ * @brief Updates the debounce FSM periodically.
  *
- * @note   Esta función debe ser llamada periódicamente para actualizar la Máquina de Estados
- *         Finitos (MEF) de anti-rebote. Comprueba el estado del botón y realiza las transiciones
- *         de estado necesarias de acuerdo a la técnica de anti-rebote implementada.
+ * @note This function should be called periodically to update the Finite State Machine (FSM)
+ *       for button debounce. It checks the button state and performs state transitions
+ *       based on the implemented debounce technique.
  *
- * @retval None
+ * @param button Pointer to the debounceButton_t structure.
+ * @return None.
  */
 void debounceFSM_update(debounceButton_t *button)
 {
@@ -112,14 +104,14 @@ void debounceFSM_update(debounceButton_t *button)
 }
 
 /**
- * @brief  Lee el estado del botón después del anti-rebote y devuelve si fue presionado.
+ * @brief Reads the button state after debounce and returns whether it was pressed.
  *
- * @note   Esta función debe ser llamada periódicamente para leer el estado del botón
- *         después de aplicar la técnica de anti-rebote. Si el botón ha sido presionado
- *         desde la última vez que se llamó a esta función, se devuelve `TRUE`. En caso
- *         contrario, se devuelve `FALSE`.
+ * @note This function should be called periodically to read the button state after applying
+ *       the debounce technique. If the button has been pressed since the last time this
+ *       function was called, it returns `TRUE`. Otherwise, it returns `FALSE`.
  *
- * @return `TRUE` si el botón fue presionado, `FALSE` en caso contrario.
+ * @param button Pointer to the debounceButton_t structure.
+ * @return `TRUE` if the button was pressed, `FALSE` otherwise.
  */
 bool_t readButton(debounceButton_t *button)
 {
@@ -131,11 +123,12 @@ bool_t readButton(debounceButton_t *button)
 
 /* Error handling function ----------------------------------------------------*/
 /**
- * @brief  Función de manejo de errores.
- * @note   Esta función es llamada si se detecta un error durante la inicialización
- *         de la MEF. Se recomienda agregar aquí el código de manejo de errores
- *         adecuado para el proyecto.
- * @retval None
+ * @brief Error handling function.
+ *
+ * @note This function is called when an error is detected during FSM initialization.
+ *       It is recommended to implement appropriate error handling code for the project.
+ *
+ * @return None.
  */
 void error_Handler()
 {

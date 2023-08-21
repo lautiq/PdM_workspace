@@ -1,0 +1,193 @@
+/**
+ * @file API_chronosFSM.c
+ * @brief Source file for the Chronos Finite State Machine (FSM) module.
+ * @author Lautaro Quarin
+ */
+
+
+#include "API_chronos.h"
+#include "API_SSD1306.h"
+#include "API_debounce.h"
+
+
+static chronosState_t currentState = CHRONOS_STATE_INIT;
+static uint64_t startTime = 0;
+static uint64_t pausedTime = 0;
+static uint64_t elapsedTime = 0;
+static uint64_t pausedAtTime = 0;
+bool_t commingFromPause = false;
+bool_t stopFromPause = false;
+
+SSD1306_t ssd1306;
+
+
+/**
+ * @brief Calculate and fill the chronosTime_t structure.
+ *
+ * This function calculates the hours, minutes, and seconds based on the input time in milliseconds
+ * and fills the chronosTime_t structure with the calculated values.
+ *
+ * @param timeMs Input time in milliseconds.
+ * @param time Pointer to a chronosTime_t structure to be filled.
+ */
+void calculateElapsedTime(uint32_t timeMs, chronosTime_t *time) {
+    time->hours = timeMs / 3600000;
+    time->minutes = (timeMs / 60000) % 60;
+    time->seconds = (timeMs / 1000) % 60;
+}
+
+/**
+ * @brief Display the time on the screen.
+ *
+ * This function takes a time value and converts it into the chronosTime_t structure
+ * to display the hours, minutes, and seconds on the screen.
+ *
+ * @param time Time value to be displayed.
+ */
+void displayTimeOnScreen(uint64_t time) {
+    chronosTime_t timeStruct;
+    calculateElapsedTime(time, &timeStruct);
+
+    char timeStr[20];
+    snprintf(timeStr, sizeof(timeStr), "%02u:%02u:%02u", timeStruct.hours, timeStruct.minutes, timeStruct.seconds);
+    oledSetCursor(20, 40);
+    oledWriteString(timeStr, White);
+    updateScreen();
+}
+
+/**
+ * @brief Initialize the Chronos FSM module.
+ */
+void chronosFSM_init()
+{
+
+	currentState = CHRONOS_STATE_INIT;
+	startTime = 0;
+	pausedTime = 0;
+	elapsedTime = 0;
+}
+
+/**
+ * @brief Update the Chronos FSM based on button inputs.
+ *
+ * This function updates the Chronos FSM based on the current button inputs.
+ * It manages the various states of the chronometer and displays time on screen.
+ *
+ * @param btn1Pressed Button 1 pressed flag.
+ * @param btn2Pressed Button 2 pressed flag.
+ * @param btn3Pressed Button 3 pressed flag.
+ */
+void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Pressed) {
+
+    uint64_t currentTime = HAL_GetTick();
+
+    switch (currentState) {
+        case CHRONOS_STATE_INIT:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("INSTRUCTIONS", White);
+            oledSetCursor(0,15);
+            oledWriteString("BTN1: START", White);
+            oledSetCursor(0,30);
+            oledWriteString("BTN2: PAUSE/RESUME", White);
+            oledSetCursor(0,45);
+            oledWriteString("BTN3: STOP", White);
+           updateScreen();
+
+            if (btn1Pressed) {
+                currentState = CHRONOS_STATE_START;
+                startTime = currentTime;
+            }
+            break;
+
+        case CHRONOS_STATE_START:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("STARTED!", White);
+
+            if (btn2Pressed) {
+                currentState = CHRONOS_STATE_PAUSE;
+                pausedTime = elapsedTime;
+            }
+            if (btn3Pressed) {
+                currentState = CHRONOS_STATE_STOP;
+            }
+            if(!commingFromPause) {
+                elapsedTime = currentTime - startTime;
+            } else {
+                elapsedTime = currentTime - pausedAtTime;
+            }
+            oledSetCursor(0, 20);
+            oledWriteString("TIME:", White);
+            displayTimeOnScreen(elapsedTime);
+            updateScreen();
+            break;
+
+        case CHRONOS_STATE_PAUSE:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("PAUSED!", White);
+
+            if (btn2Pressed) {
+                currentState = CHRONOS_STATE_RESUME;
+                pausedAtTime = currentTime;  // save the time when paused.
+                commingFromPause = true;
+            }
+            if (btn3Pressed) {
+                currentState = CHRONOS_STATE_STOP;
+                stopFromPause = true;
+
+            }
+
+            // Display the time paused during the start state.
+            oledSetCursor(0, 20);
+            oledWriteString("TIME:", White);
+            displayTimeOnScreen(pausedTime);
+           updateScreen();
+            break;
+
+        case CHRONOS_STATE_RESUME:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("RE-START!", White);
+
+            if (btn2Pressed) {
+                currentState = CHRONOS_STATE_PAUSE;
+                pausedTime += currentTime - pausedAtTime;  // Add paused time to pausedTime
+            }
+            if (btn3Pressed) {
+                currentState = CHRONOS_STATE_STOP;
+                stopFromPause = false;
+            }
+
+            elapsedTime = currentTime - startTime - pausedTime;  // Calculate total time minus paused time
+            oledSetCursor(0, 20);
+            oledWriteString("TIME:", White);
+            displayTimeOnScreen(elapsedTime);
+           updateScreen();
+            break;
+
+        case CHRONOS_STATE_STOP:
+            cleanScreen(Black);
+            oledSetCursor(0, 0);
+            oledWriteString("STOPPED!", White);
+
+            oledSetCursor(0, 20);
+            oledWriteString("FINAL TIME:", White);
+            if(stopFromPause){
+            	displayTimeOnScreen(pausedTime);
+            }else if(!stopFromPause){
+            	displayTimeOnScreen(elapsedTime);
+            }
+
+
+            if (btn1Pressed) {
+                chronosFSM_init();
+                pausedAtTime = 0;  // Reset paused time
+                commingFromPause = false;  // Reset pause flag.
+            }
+            updateScreen();
+            break;
+    }
+
+}

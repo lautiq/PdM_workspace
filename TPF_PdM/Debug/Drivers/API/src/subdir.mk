@@ -9,24 +9,21 @@ C_SRCS += \
 ../Drivers/API/src/API_SSD1306_Fonts.c \
 ../Drivers/API/src/API_chronos.c \
 ../Drivers/API/src/API_debounce.c \
-../Drivers/API/src/API_delay.c \
-../Drivers/API/src/API_uart.c 
+../Drivers/API/src/API_delay.c 
 
 OBJS += \
 ./Drivers/API/src/API_SSD1306.o \
 ./Drivers/API/src/API_SSD1306_Fonts.o \
 ./Drivers/API/src/API_chronos.o \
 ./Drivers/API/src/API_debounce.o \
-./Drivers/API/src/API_delay.o \
-./Drivers/API/src/API_uart.o 
+./Drivers/API/src/API_delay.o 
 
 C_DEPS += \
 ./Drivers/API/src/API_SSD1306.d \
 ./Drivers/API/src/API_SSD1306_Fonts.d \
 ./Drivers/API/src/API_chronos.d \
 ./Drivers/API/src/API_debounce.d \
-./Drivers/API/src/API_delay.d \
-./Drivers/API/src/API_uart.d 
+./Drivers/API/src/API_delay.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -36,7 +33,7 @@ Drivers/API/src/%.o Drivers/API/src/%.su Drivers/API/src/%.cyclo: ../Drivers/API
 clean: clean-Drivers-2f-API-2f-src
 
 clean-Drivers-2f-API-2f-src:
-	-$(RM) ./Drivers/API/src/API_SSD1306.cyclo ./Drivers/API/src/API_SSD1306.d ./Drivers/API/src/API_SSD1306.o ./Drivers/API/src/API_SSD1306.su ./Drivers/API/src/API_SSD1306_Fonts.cyclo ./Drivers/API/src/API_SSD1306_Fonts.d ./Drivers/API/src/API_SSD1306_Fonts.o ./Drivers/API/src/API_SSD1306_Fonts.su ./Drivers/API/src/API_chronos.cyclo ./Drivers/API/src/API_chronos.d ./Drivers/API/src/API_chronos.o ./Drivers/API/src/API_chronos.su ./Drivers/API/src/API_debounce.cyclo ./Drivers/API/src/API_debounce.d ./Drivers/API/src/API_debounce.o ./Drivers/API/src/API_debounce.su ./Drivers/API/src/API_delay.cyclo ./Drivers/API/src/API_delay.d ./Drivers/API/src/API_delay.o ./Drivers/API/src/API_delay.su ./Drivers/API/src/API_uart.cyclo ./Drivers/API/src/API_uart.d ./Drivers/API/src/API_uart.o ./Drivers/API/src/API_uart.su
+	-$(RM) ./Drivers/API/src/API_SSD1306.cyclo ./Drivers/API/src/API_SSD1306.d ./Drivers/API/src/API_SSD1306.o ./Drivers/API/src/API_SSD1306.su ./Drivers/API/src/API_SSD1306_Fonts.cyclo ./Drivers/API/src/API_SSD1306_Fonts.d ./Drivers/API/src/API_SSD1306_Fonts.o ./Drivers/API/src/API_SSD1306_Fonts.su ./Drivers/API/src/API_chronos.cyclo ./Drivers/API/src/API_chronos.d ./Drivers/API/src/API_chronos.o ./Drivers/API/src/API_chronos.su ./Drivers/API/src/API_debounce.cyclo ./Drivers/API/src/API_debounce.d ./Drivers/API/src/API_debounce.o ./Drivers/API/src/API_debounce.su ./Drivers/API/src/API_delay.cyclo ./Drivers/API/src/API_delay.d ./Drivers/API/src/API_delay.o ./Drivers/API/src/API_delay.su
 
 .PHONY: clean-Drivers-2f-API-2f-src
 

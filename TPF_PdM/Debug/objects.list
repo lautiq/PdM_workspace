@@ -10,7 +10,6 @@
 "./Drivers/API/src/API_chronos.o"
 "./Drivers/API/src/API_debounce.o"
 "./Drivers/API/src/API_delay.o"
-"./Drivers/API/src/API_uart.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o"

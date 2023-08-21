@@ -1,8 +1,7 @@
-/*
- * API_chronosFSM.c
- *
- *  Created on: Aug 17, 2023
- *      Author: Lauti
+/**
+ * @file API_chronosFSM.c
+ * @brief Source file for the Chronos Finite State Machine (FSM) module.
+ * @author Lautaro Quarin
  */
 
 
@@ -21,16 +20,35 @@ bool_t stopFromPause = false;
 
 SSD1306_t ssd1306;
 
+#define MS_PER_HOUR 3600000
+#define MS_PER_MINUTE 60000
+#define MS_PER_SECOND 1000
+#define SECONDS_PER_MINUTE 60
 
-// Función para calcular y llenar la estructura chronosTime_t
-void calculateElapsedTime(uint32_t timeMs, chronosTime_t *time) {
-    time->hours = timeMs / 3600000;
-    time->minutes = (timeMs / 60000) % 60;
-    time->seconds = (timeMs / 1000) % 60;
+/**
+ * @brief Calculate and fill the chronosTime_t structure.
+ *
+ * This function calculates the hours, minutes, and seconds based on the input time in milliseconds
+ * and fills the chronosTime_t structure with the calculated values.
+ *
+ * @param timeMs Input time in milliseconds.
+ * @param time Pointer to a chronosTime_t structure to be filled.
+ */
+static void calculateElapsedTime(uint32_t timeMs, chronosTime_t *time) {
+    time->hours = timeMs / MS_PER_HOUR;
+    time->minutes = (timeMs / MS_PER_MINUTE) % SECONDS_PER_MINUTE;
+    time->seconds = (timeMs / MS_PER_SECOND) % SECONDS_PER_MINUTE;
 }
 
-// Mostrar el tiempo en pantalla
-void displayTimeOnScreen(uint64_t time) {
+/**
+ * @brief Display the time on the screen.
+ *
+ * This function takes a time value and converts it into the chronosTime_t structure
+ * to display the hours, minutes, and seconds on the screen.
+ *
+ * @param time Time value to be displayed.
+ */
+static void displayTimeOnScreen(uint64_t time) {
     chronosTime_t timeStruct;
     calculateElapsedTime(time, &timeStruct);
 
@@ -41,6 +59,9 @@ void displayTimeOnScreen(uint64_t time) {
     updateScreen();
 }
 
+/**
+ * @brief Initialize the Chronos FSM module.
+ */
 void chronosFSM_init()
 {
 
@@ -50,6 +71,16 @@ void chronosFSM_init()
 	elapsedTime = 0;
 }
 
+/**
+ * @brief Update the Chronos FSM based on button inputs.
+ *
+ * This function updates the Chronos FSM based on the current button inputs.
+ * It manages the various states of the chronometer and displays time on screen.
+ *
+ * @param btn1Pressed Button 1 pressed flag.
+ * @param btn2Pressed Button 2 pressed flag.
+ * @param btn3Pressed Button 3 pressed flag.
+ */
 void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Pressed) {
 
     uint64_t currentTime = HAL_GetTick();
@@ -103,7 +134,7 @@ void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Presse
 
             if (btn2Pressed) {
                 currentState = CHRONOS_STATE_RESUME;
-                pausedAtTime = currentTime;  // Guarda el tiempo en el que se pauso.
+                pausedAtTime = currentTime;  // save the time when paused.
                 commingFromPause = true;
             }
             if (btn3Pressed) {
@@ -112,7 +143,7 @@ void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Presse
 
             }
 
-            // Mostrar el tiempo que se detuvo en el estado de start (pausedTime)
+            // Display the time paused during the start state.
             oledSetCursor(0, 20);
             oledWriteString("TIME:", White);
             displayTimeOnScreen(pausedTime);
@@ -126,14 +157,14 @@ void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Presse
 
             if (btn2Pressed) {
                 currentState = CHRONOS_STATE_PAUSE;
-                pausedTime += currentTime - pausedAtTime;  // Agregar el tiempo en pausa al tiempo pausado
+                pausedTime += currentTime - pausedAtTime;  // Add paused time to pausedTime
             }
             if (btn3Pressed) {
                 currentState = CHRONOS_STATE_STOP;
                 stopFromPause = false;
             }
 
-            elapsedTime = currentTime - startTime - pausedTime;  // Calcular tiempo total restando tiempo pausado
+            elapsedTime = currentTime - startTime - pausedTime;  // Calculate total time minus paused time
             oledSetCursor(0, 20);
             oledWriteString("TIME:", White);
             displayTimeOnScreen(elapsedTime);
@@ -156,8 +187,8 @@ void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Presse
 
             if (btn1Pressed) {
                 chronosFSM_init();
-                pausedAtTime = 0;  // Reiniciar el tiempo pausado
-                commingFromPause = false;  // Reiniciar la bandera de pausa
+                pausedAtTime = 0;  // Reset paused time
+                commingFromPause = false;  // Reset pause flag.
             }
             updateScreen();
             break;

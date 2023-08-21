@@ -109,7 +109,7 @@ debounceFSM_init(&btn2);
 debounceFSM_init(&btn3);
 chronosFSM_init();
 
-//Iniciamos en el primer estado:
+// Initialize in the first state:
 oledInit();
 cleanScreen(Black);
 oledSetCursor(10, 20);
@@ -130,26 +130,22 @@ while (1)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	  //update debounce FSM
+	 // Update debounce FSM
 	  debounceFSM_update(&btn1);
 	  debounceFSM_update(&btn2);
 	  debounceFSM_update(&btn3);
 
-    // Obtener estados de los botones
+	  // Get button states
     bool_t btn1Pressed = readButton(&btn1);
     bool_t btn2Pressed = readButton(&btn2);
     bool_t btn3Pressed = readButton(&btn3);
 
 
-	  //update chronometer:
+    // Update chronometer
 	  chronosFSM_update(btn1Pressed, btn2Pressed, btn3Pressed);
 }
 /* USER CODE END 3 */
 }
-
-
-
-
 
 
 /**

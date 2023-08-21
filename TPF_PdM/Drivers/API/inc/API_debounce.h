@@ -1,22 +1,29 @@
-/*
- * API_debounce.h
+/**
+ * @file API_debounce.h
+ * @brief Header file for debounce handling.
  *
- *  Created on: Jul 13, 2023
- *      Author: lauta
+ * @details This file contains the structures and function declarations for implementing
+ *          debounce handling using a Finite State Machine (FSM) approach.
+ *
+ * @author Lautaro Quarin
  */
 
 #ifndef API_INC_API_DEBOUNCE_H_
 #define API_INC_API_DEBOUNCE_H_
 
 #include "API_delay.h"
-
+/**
+ * @brief Enumeration of debounce button states.
+ */
 typedef enum{
 	BUTTON_UP,
 	BUTTON_FALLING,
 	BUTTON_DOWN,
 	BUTTON_RAISING,
 }debounceState_t;
-
+/**
+ * @brief Structure for debounce button.
+ */
 typedef struct {
 	debounceState_t currentState;
 	delay_t debounceDelay;
