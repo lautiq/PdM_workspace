@@ -1,0 +1,6 @@
+API_uart.c:24:6:uartInit	2
+API_uart.c:45:6:uartSendString	1
+API_uart.c:53:6:uartSendStringSize	1
+API_uart.c:61:6:uartReceiveStringSize	1
+API_uart.c:67:6:HAL_UART_RxCpltCallback	3
+API_uart.c:85:13:printUARTConfig	1

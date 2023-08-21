@@ -5,7 +5,7 @@
  * @author Lautaro Quarin
  */
 
-#include "API_SSD1306.h"
+#include "../inc/API_SSD1306.h"
 #include <stdlib.h>
 #include <string.h>
 

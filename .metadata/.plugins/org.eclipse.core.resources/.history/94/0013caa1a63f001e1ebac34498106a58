@@ -1,0 +1,128 @@
+/*
+ * API_chronosFSM.c
+ *
+ *  Created on: Aug 17, 2023
+ *      Author: Lauti
+ */
+
+
+#include "API_chronos.h"
+#include "API_SSD1306.h"
+#include "API_debounce.h"
+
+
+static chronosState_t currentState = CHRONOS_STATE_INIT;
+static uint32_t startTime = 0;
+static uint32_t pausedTime = 0;
+static uint32_t elapsedTime = 0;
+
+SSD1306_t ssd1306;
+
+
+// Función para calcular y llenar la estructura chronosTime_t
+void calculateElapsedTime(uint32_t timeMs, chronosTime_t *time) {
+    time->hours = timeMs / 3600000;
+    time->minutes = (timeMs / 60000) % 60;
+    time->seconds = (timeMs / 1000) % 60;
+}
+
+// Mostrar el tiempo en pantalla
+void displayTimeOnScreen(uint32_t time) {
+    chronosTime_t timeStruct;
+    calculateElapsedTime(time, &timeStruct);
+
+    char timeStr[20];
+    snprintf(timeStr, sizeof(timeStr), "%02u:%02u:%02u", timeStruct.hours, timeStruct.minutes, timeStruct.seconds);
+    oledSetCursor(0, 0);
+    oledWriteString(timeStr, White);
+}
+
+void chronosFSM_init(debounceButton_t *btn1, debounceButton_t *btn2,debounceButton_t *btn3)
+{
+
+	currentState = CHRONOS_STATE_INIT;
+	startTime = 0;
+	pausedTime = 0;
+	elapsedTime = 0;
+}
+
+void chronosFSM_update()
+{
+	debounceFSM_update(&btn1);
+	debounceFSM_update(&btn2);
+	debounceFSM_update(&btn3);
+
+	uint32_t currentTime = HAL_GetTick();
+
+	switch (currentState){
+
+	case CHRONOS_STATE_INIT:
+		  cleanScreen(Black);
+		  oledSetCursor(0,0);
+		  oledWriteString("ESTADO INIT", White);
+		  updateScreen();
+		if(readButton(&btn1)) {
+			currentState = CHRONOS_STATE_START;
+			startTime = currentTime; /*GET_CURRENT_TIME*/
+		}
+	break;
+
+	case CHRONOS_STATE_START:
+		cleanScreen(Black);
+		  oledSetCursor(0,0);
+		  oledWriteString("ESTADO START", White);
+		  updateScreen();
+		//update elapsedTime
+		elapsedTime = currentTime - startTime;
+		//display elapsed time :
+		displayTimeOnScreen(elapsedTime);
+
+		//Exit state:
+		if(readButton(&btn2)){
+			currentState = CHRONOS_STATE_PAUSE;
+			pausedTime = HAL_GetTick();
+		}else if(readButton(&btn3)){
+			currentState = CHRONOS_STATE_STOP;
+		}
+	break;
+
+	case CHRONOS_STATE_PAUSE:
+		//display pausedTime.
+		displayTimeOnScreen(pausedTime);
+		//exit state logic.
+		if(readButton(&btn2)) {
+			currentState = CHRONOS_STATE_RESUME;
+		} else if(readButton(&btn3)) {
+			currentState = CHRONOS_STATE_STOP;
+		}
+	break;
+
+
+	case CHRONOS_STATE_RESUME:
+		startTime += currentTime - pausedTime;
+		displayTimeOnScreen(elapsedTime);
+		//exit state logic.
+		if(readButton(&btn2)) {
+			currentState = CHRONOS_STATE_PAUSE;
+			pausedTime = currentTime;
+		} else if(readButton(&btn3)) {
+			currentState = CHRONOS_STATE_STOP;
+		}
+	break;
+
+	case CHRONOS_STATE_STOP:
+		//Display elapsedTime with blinking animation
+
+		displayTimeOnScreen(elapsedTime);
+
+		if((elapsedTime >= 20000) || readButton(&btn1))
+		{
+			currentState = CHRONOS_STATE_INIT;
+			startTime = 0;
+			pausedTime = 0;
+			elapsedTime = 0;
+		}
+	break;
+	}
+	updateScreen();
+}

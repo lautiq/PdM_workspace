@@ -1,0 +1,110 @@
+/*
+ * API_chronosFSM.c
+ *
+ *  Created on: Aug 17, 2023
+ *      Author: Lauti
+ */
+
+
+#include "API_chronos.h"
+#include "API_SSD1306.h"
+#include "API_debounce.h"
+
+
+static chronosState_t currentState = CHRONOS_STATE_INIT;
+static uint32_t startTime = 0;
+static uint32_t pausedTime = 0;
+static uint32_t elapsedTime = 0;
+
+SSD1306_t ssd1306;
+
+
+// Función para calcular y llenar la estructura chronosTime_t
+void calculateElapsedTime(uint32_t timeMs, chronosTime_t *time) {
+    time->hours = timeMs / 3600000;
+    time->minutes = (timeMs / 60000) % 60;
+    time->seconds = (timeMs / 1000) % 60;
+}
+
+// Mostrar el tiempo en pantalla
+void displayTimeOnScreen(uint32_t time) {
+    chronosTime_t timeStruct;
+    calculateElapsedTime(time, &timeStruct);
+
+    char timeStr[20];
+    snprintf(timeStr, sizeof(timeStr), "%02u:%02u:%02u", timeStruct.hours, timeStruct.minutes, timeStruct.seconds);
+    oledSetCursor(0, 0);
+    oledWriteString(timeStr, White);
+}
+
+void chronosFSM_init()
+{
+
+	currentState = CHRONOS_STATE_INIT;
+	startTime = 0;
+	pausedTime = 0;
+	elapsedTime = 0;
+}
+
+void chronosFSM_update()
+{
+    uint32_t currentTime = HAL_GetTick();
+
+	switch (currentState){
+
+	case CHRONOS_STATE_INIT:
+		  cleanScreen(Black);
+		  oledSetCursor(0,0);
+		  oledWriteString("ESTADO INIT", White);
+		  updateScreen();
+
+
+	break;
+
+	case CHRONOS_STATE_START:
+		cleanScreen(Black);
+		  oledSetCursor(0,0);
+		  oledWriteString("ESTADO START", White);
+		  updateScreen();
+		//update elapsedTime
+		elapsedTime = currentTime - startTime;
+		//display elapsed time :
+		displayTimeOnScreen(elapsedTime);
+
+
+
+	break;
+
+	case CHRONOS_STATE_PAUSE:
+		//display pausedTime.
+		displayTimeOnScreen(pausedTime);
+
+
+	break;
+
+
+	case CHRONOS_STATE_RESUME:
+		startTime += currentTime - pausedTime;
+		displayTimeOnScreen(elapsedTime);
+
+
+
+	break;
+
+	case CHRONOS_STATE_STOP:
+		//Display elapsedTime with blinking animation
+
+		displayTimeOnScreen(elapsedTime);
+
+		if((elapsedTime >= 20000) || readButton(&btn1))
+		{
+			currentState = CHRONOS_STATE_INIT;
+			startTime = 0;
+			pausedTime = 0;
+			elapsedTime = 0;
+		}
+	break;
+	}
+	updateScreen();
+}
+

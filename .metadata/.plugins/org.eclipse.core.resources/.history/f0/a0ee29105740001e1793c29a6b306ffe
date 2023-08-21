@@ -1,0 +1,149 @@
+/**
+  ******************************************************************************
+  * @file           : APIDebounce.c
+  * @brief          : Implementación de funciones para el manejo de anti-rebote
+  *                   utilizando una MEF (Máquina de Estados Finitos) y la BSP
+  *                   (Board Support Package) para la lectura del botón.
+  *
+  *
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) [13-07-2023] [Lauta]
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+
+
+/* Includes ------------------------------------------------------------------*/
+#include "API_debounce.h"
+#include "API_delay.h"
+
+/* Private defines -----------------------------------------------------------*/
+#define DEBOUNCE_TIME_MS 40
+
+
+
+/* Public functions ----------------------------------------------------------*/
+/**
+ * @brief  Inicializa la MEF de anti-rebote.
+ *
+ * @note   Esta función inicializa la Máquina de Estados Finitos (MEF) utilizada
+ *         para el anti-rebote del botón. Debe ser llamada al inicio del programa
+ *         antes de utilizar las funciones de anti-rebote.
+ *
+ * @note   Si el botón está presionado al momento de iniciar el programa, se activará
+ *         la función de error y el LED incorporado se encenderá. El programa quedará
+ *         bloqueado en este estado hasta que se reinicie.
+ *
+ * @retval None
+ */
+void debounceFSM_init(debounceButton_t *button)
+{
+	GPIO_PinState buttonState = HAL_GPIO_ReadPin(button->port, button->pin);
+	if(buttonState == GPIO_PIN_SET)
+	{
+		error_Handler();
+	}
+
+	button->currentState = BUTTON_UP;
+	delayInit(&(button->debounceDelay), DEBOUNCE_TIME_MS);
+}
+
+
+/**
+ * @brief  Actualiza la MEF de anti-rebote periódicamente.
+ *
+ * @note   Esta función debe ser llamada periódicamente para actualizar la Máquina de Estados
+ *         Finitos (MEF) de anti-rebote. Comprueba el estado del botón y realiza las transiciones
+ *         de estado necesarias de acuerdo a la técnica de anti-rebote implementada.
+ *
+ * @retval None
+ */
+void debounceFSM_update(debounceButton_t *button)
+{
+	GPIO_PinState buttonState = BSP_PB_GetState(button->pin);
+
+	switch(button->currentState){
+	case BUTTON_UP:
+		if (buttonState == GPIO_PIN_RESET)
+		{
+			button->currentState = BUTTON_FALLING;
+			delayWrite(&(button->debounceDelay), DEBOUNCE_TIME_MS);
+		}
+	break;
+
+	case BUTTON_FALLING:
+		if(delayRead(&(button->debounceDelay)))
+		{
+			button->currentState = BUTTON_DOWN;
+			button->pressedFlag = true;
+			button->isPressed = true;
+		}
+	break;
+
+	case BUTTON_DOWN:
+		if(buttonState == GPIO_PIN_SET)
+		{
+			button->currentState = BUTTON_RAISING;
+			delayWrite(&(button->debounceDelay), DEBOUNCE_TIME_MS);
+		}
+	break;
+
+	case BUTTON_RAISING:
+		if(delayRead(&(button->debounceDelay)))
+		{
+			button->currentState = BUTTON_UP;
+			button->pressedFlag= false;
+			button->isPressed = true;
+		}
+	break;
+
+	default:
+		button->currentState = BUTTON_UP;
+	break;
+
+	}
+}
+
+/**
+ * @brief  Lee el estado del botón después del anti-rebote y devuelve si fue presionado.
+ *
+ * @note   Esta función debe ser llamada periódicamente para leer el estado del botón
+ *         después de aplicar la técnica de anti-rebote. Si el botón ha sido presionado
+ *         desde la última vez que se llamó a esta función, se devuelve `TRUE`. En caso
+ *         contrario, se devuelve `FALSE`.
+ *
+ * @return `TRUE` si el botón fue presionado, `FALSE` en caso contrario.
+ */
+bool_t readButton(debounceButton_t *button)
+{
+	bool_t isButtonPressed = button->pressedFlag;
+	button->pressedFlag = false;
+	return isButtonPressed;
+}
+
+
+/* Error handling function ----------------------------------------------------*/
+/**
+ * @brief  Función de manejo de errores.
+ * @note   Esta función es llamada si se detecta un error durante la inicialización
+ *         de la MEF. Se recomienda agregar aquí el código de manejo de errores
+ *         adecuado para el proyecto.
+ * @retval None
+ */
+void error_Handler()
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+	BSP_LED_Toggle(LED_BUILTIN);
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
+}

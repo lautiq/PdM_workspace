@@ -1,0 +1,37 @@
+/*
+ * API_debounce.h
+ *
+ *  Created on: Jul 13, 2023
+ *      Author: lauta
+ */
+
+#ifndef API_INC_API_DEBOUNCE_H_
+#define API_INC_API_DEBOUNCE_H_
+
+#include "API_delay.h"
+
+typedef enum{
+	BUTTON_UP,
+	BUTTON_FALLING,
+	BUTTON_DOWN,
+	BUTTON_RAISING,
+}debounceState_t;
+
+typedef struct {
+	debounceState_t currentState;
+	delay_t debounceDelay;
+	bool_t pressedFlag;
+	bool_t isPressed;
+	uint16_t pin; //GPIO_PIN_RESET or GPIO_PIN_SET
+	GPIO_TypeDef port;
+}debounceButton_t;
+
+
+void debounceFSM_init(debounceButton_t *button);
+void debounceFSM_update(debounceButton_t *button);
+void error_Handler();
+bool_t readButton(debounceButton_t *button);
+
+
+
+#endif /* API_INC_API_DEBOUNCE_H_ */
