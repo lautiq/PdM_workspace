@@ -12,9 +12,12 @@
 
 
 static chronosState_t currentState = CHRONOS_STATE_INIT;
-static uint32_t startTime = 0;
-static uint32_t pausedTime = 0;
-static uint32_t elapsedTime = 0;
+static uint64_t startTime = 0;
+static uint64_t pausedTime = 0;
+static uint64_t elapsedTime = 0;
+static uint64_t pausedAtTime = 0;
+bool_t commingFromPause = false;
+bool_t stopFromPause = false;
 
 SSD1306_t ssd1306;
 
@@ -27,13 +30,13 @@ void calculateElapsedTime(uint32_t timeMs, chronosTime_t *time) {
 }
 
 // Mostrar el tiempo en pantalla
-void displayTimeOnScreen(uint32_t time) {
+void displayTimeOnScreen(uint64_t time) {
     chronosTime_t timeStruct;
     calculateElapsedTime(time, &timeStruct);
 
     char timeStr[20];
     snprintf(timeStr, sizeof(timeStr), "%02u:%02u:%02u", timeStruct.hours, timeStruct.minutes, timeStruct.seconds);
-    oledSetCursor(0, 20);
+    oledSetCursor(20, 40);
     oledWriteString(timeStr, White);
     updateScreen();
 }
@@ -41,100 +44,123 @@ void displayTimeOnScreen(uint32_t time) {
 void chronosFSM_init()
 {
 
-	currentState = CHRONOS_STATE_START;
+	currentState = CHRONOS_STATE_INIT;
 	startTime = 0;
 	pausedTime = 0;
 	elapsedTime = 0;
 }
 
-void chronosFSM_update()
-{
-	debounceFSM_update(&btn1);
-	debounceFSM_update(&btn2);
-	debounceFSM_update(&btn3);
+void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Pressed) {
 
-    uint32_t currentTime = HAL_GetTick();
+    uint64_t currentTime = HAL_GetTick();
 
-	switch (currentState){
+    switch (currentState) {
+        case CHRONOS_STATE_INIT:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("INSTRUCTIONS", White);
+            oledSetCursor(0,15);
+            oledWriteString("BTN1: START", White);
+            oledSetCursor(0,30);
+            oledWriteString("BTN2: PAUSE/RESUME", White);
+            oledSetCursor(0,45);
+            oledWriteString("BTN3: STOP", White);
+           updateScreen();
 
-	case CHRONOS_STATE_INIT:
-		  cleanScreen(Black);
-		  oledSetCursor(0,0);
-		  oledWriteString("ESTADO INIT", White);
-		  updateScreen();
-	break;
+            if (btn1Pressed) {
+                currentState = CHRONOS_STATE_START;
+                startTime = currentTime;
+            }
+            break;
 
-	case CHRONOS_STATE_START:
-		//cleanScreen(Black);
-		  //oledSetCursor(0,0);
-		 // oledWriteString("START", White);
-		  //updateScreen();
-		//update elapsedTime
-		elapsedTime = currentTime - startTime;
+        case CHRONOS_STATE_START:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("STARTED!", White);
 
-		//display elapsed time :
-		oledSetCursor(0, 0);
-		oledWriteString("tiempo:", White);
-		displayTimeOnScreen(elapsedTime);
-		updateScreen();
-	break;
+            if (btn2Pressed) {
+                currentState = CHRONOS_STATE_PAUSE;
+                pausedTime = elapsedTime;
+            }
+            if (btn3Pressed) {
+                currentState = CHRONOS_STATE_STOP;
+            }
+            if(!commingFromPause) {
+                elapsedTime = currentTime - startTime;
+            } else {
+                elapsedTime = currentTime - pausedAtTime;
+            }
+            oledSetCursor(0, 20);
+            oledWriteString("TIME:", White);
+            displayTimeOnScreen(elapsedTime);
+            updateScreen();
+            break;
 
-	case CHRONOS_STATE_PAUSE:
-        cleanScreen(Black);
-        oledSetCursor(0, 0);
-        oledWriteString("PAUSA", White);
-        updateScreen();
+        case CHRONOS_STATE_PAUSE:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("PAUSED!", White);
 
-        // Display paused time
-        oledSetCursor(0, 20);
-        oledWriteString("Tiempo pausado:", White);
-        displayTimeOnScreen(pausedTime);
-        updateScreen();
-        break;
+            if (btn2Pressed) {
+                currentState = CHRONOS_STATE_RESUME;
+                pausedAtTime = currentTime;  // Guarda el tiempo en el que se pauso.
+                commingFromPause = true;
+            }
+            if (btn3Pressed) {
+                currentState = CHRONOS_STATE_STOP;
+                stopFromPause = true;
 
-	break;
+            }
+
+            // Mostrar el tiempo que se detuvo en el estado de start (pausedTime)
+            oledSetCursor(0, 20);
+            oledWriteString("TIME:", White);
+            displayTimeOnScreen(pausedTime);
+           updateScreen();
+            break;
+
+        case CHRONOS_STATE_RESUME:
+            cleanScreen(Black);
+            oledSetCursor(20, 0);
+            oledWriteString("RE-START!", White);
+
+            if (btn2Pressed) {
+                currentState = CHRONOS_STATE_PAUSE;
+                pausedTime += currentTime - pausedAtTime;  // Agregar el tiempo en pausa al tiempo pausado
+            }
+            if (btn3Pressed) {
+                currentState = CHRONOS_STATE_STOP;
+                stopFromPause = false;
+            }
+
+            elapsedTime = currentTime - startTime - pausedTime;  // Calcular tiempo total restando tiempo pausado
+            oledSetCursor(0, 20);
+            oledWriteString("TIME:", White);
+            displayTimeOnScreen(elapsedTime);
+           updateScreen();
+            break;
+
+        case CHRONOS_STATE_STOP:
+            cleanScreen(Black);
+            oledSetCursor(0, 0);
+            oledWriteString("STOPPED!", White);
+
+            oledSetCursor(0, 20);
+            oledWriteString("FINAL TIME:", White);
+            if(stopFromPause){
+            	displayTimeOnScreen(pausedTime);
+            }else if(!stopFromPause){
+            	displayTimeOnScreen(elapsedTime);
+            }
 
 
-	case CHRONOS_STATE_RESUME:
-		cleanScreen(Black);
-		oledSetCursor(0, 0);
-		oledWriteString("RESUMEN", White);
-		updateScreen();
-
-		 // Update startTime for resumed state
-		 startTime += currentTime - pausedTime;
-
-		 // Display elapsed time
-		 oledSetCursor(0, 20);
-		 oledWriteString("Tiempo:", White);
-		 displayTimeOnScreen(elapsedTime);
-		 updateScreen();
-		 break;
-
-	break;
-
-	case CHRONOS_STATE_STOP:
-		cleanScreen(Black);
-		oledSetCursor(0, 0);
-		oledWriteString("DETENIDO", White);
-		updateScreen();
-
-		// Display elapsed time
-		oledSetCursor(0, 20);
-		oledWriteString("Tiempo transcurrido:", White);
-		displayTimeOnScreen(elapsedTime);
-		updateScreen();
-
-		if (elapsedTime >= 20000) {
-			currentState = CHRONOS_STATE_INIT;
-			startTime = 0;
-			pausedTime = 0;
-			elapsedTime = 0;
-		}
-	break;
-	}
-
-	updateScreen();
+            if (btn1Pressed) {
+                chronosFSM_init();
+                pausedAtTime = 0;  // Reiniciar el tiempo pausado
+                commingFromPause = false;  // Reiniciar la bandera de pausa
+            }
+            updateScreen();
+            break;
+    }
 
 }
-

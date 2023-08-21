@@ -107,11 +107,15 @@ btn3.port = GPIOB;
 debounceFSM_init(&btn1);
 debounceFSM_init(&btn2);
 debounceFSM_init(&btn3);
-//chronosFSM_init(&btn1,&btn2,&btn3);
+chronosFSM_init();
 
 //Iniciamos en el primer estado:
 oledInit();
 cleanScreen(Black);
+oledSetCursor(10, 20);
+oledWriteString("CHRONOMETER APP!", White);
+updateScreen();
+HAL_Delay(1000);
 
 
 
@@ -126,38 +130,27 @@ while (1)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
-
 	  //update debounce FSM
 	  debounceFSM_update(&btn1);
 	  debounceFSM_update(&btn2);
 	  debounceFSM_update(&btn3);
 
-if(readButton(&btn1))
-{
-	cleanScreen(Black);
-	oledSetCursor(0,20);
-	oledWriteString("BTN1 pressed", White);
-	updateScreen();
-}else if(readButton(&btn2))
-{
-	cleanScreen(Black);
-	oledSetCursor(0,20);
-	oledWriteString("BTN2 pressed", White);
-	updateScreen();
-}else if(readButton(&btn3))
-{
-	cleanScreen(Black);
-	oledSetCursor(0,20);
-	oledWriteString("BTN3 pressed", White);
-	updateScreen();
-}
+    // Obtener estados de los botones
+    bool_t btn1Pressed = readButton(&btn1);
+    bool_t btn2Pressed = readButton(&btn2);
+    bool_t btn3Pressed = readButton(&btn3);
+
 
 	  //update chronometer:
-	  //chronosFSM_update();
+	  chronosFSM_update(btn1Pressed, btn2Pressed, btn3Pressed);
 }
 /* USER CODE END 3 */
 }
+
+
+
+
+
 
 /**
   * @brief System Clock Configuration

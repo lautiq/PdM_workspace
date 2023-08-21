@@ -1,4 +1,4 @@
-API_chronos.c:23:6:calculateElapsedTime	1
-API_chronos.c:30:6:displayTimeOnScreen	1
-API_chronos.c:41:6:chronosFSM_init	1
-API_chronos.c:50:6:chronosFSM_update	7
+API_chronos.c:26:6:calculateElapsedTime	1
+API_chronos.c:33:6:displayTimeOnScreen	1
+API_chronos.c:44:6:chronosFSM_init	1
+API_chronos.c:53:6:chronosFSM_update	17

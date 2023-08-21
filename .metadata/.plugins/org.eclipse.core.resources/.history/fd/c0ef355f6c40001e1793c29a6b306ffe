@@ -1,0 +1,37 @@
+/*
+ * API_chronosFSM.h
+ *
+ *  Created on: Aug 17, 2023
+ *      Author: Lauti
+ */
+
+#ifndef API_INC_API_CHRONOS_H_
+#define API_INC_API_CHRONOS_H_
+
+#include "API_debounce.h"
+#include "stdio.h"
+
+typedef enum {
+		CHRONOS_STATE_INIT,
+		CHRONOS_STATE_START,
+		CHRONOS_STATE_PAUSE,
+		CHRONOS_STATE_RESUME,
+		CHRONOS_STATE_STOP
+}chronosState_t;
+
+typedef struct {
+	uint32_t hours;
+	uint32_t minutes;
+	uint32_t seconds;
+}chronosTime_t;
+
+void chronosFSM_init();
+void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Pressed);
+
+
+extern debounceButton_t btn1;
+extern debounceButton_t btn2;
+extern debounceButton_t btn3;
+
+
+#endif /* API_INC_API_CHRONOS_H_ */
