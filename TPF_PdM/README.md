@@ -1,6 +1,6 @@
 # Chronometer APP 
 
-![Chronometer]![image](https://github.com/lautiq/PdM_workspace/assets/110248182/9d09d5b7-bcfd-4295-9b74-b4dfacc27400)
+![Chronometer](https://github.com/lautiq/PdM_workspace/assets/110248182/9d09d5b7-bcfd-4295-9b74-b4dfacc27400)
 
 This repository contains the firmware for the Chronometer APP, developed as the final project for the "PdM" course at [UBA]. The system includes an SSD1306 OLED display and implements a Finite State Machine (FSM) to control the chronometer's functionalities.
 
@@ -85,7 +85,7 @@ while (1)
  ```
 
 Directory Structure
-css
+```css
 Copy code
 .
 ├── core
@@ -110,7 +110,7 @@ Copy code
 ├── examples
 │   └── main.c
 └── README.md  
-
+```
 
 
 # FSM Description
