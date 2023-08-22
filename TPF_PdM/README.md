@@ -113,32 +113,33 @@ Copy code
 ```
 
 
-# FSM Description
+## FSM Description
 The Finite State Machine (FSM) implemented in API_chronos.c manages the behavior of the chronometer based on button inputs. It transitions between different states to control the start, pause, resume, and stop functionalities.
 
-States:
+# States
 
-Init State: The initial state where the chronometer is not running. Instructions for button functions are displayed on the OLED screen.
+- `Init State`: The initial state where the chronometer is not running. Instructions for button functions are displayed on the OLED screen.
 
-Start State: When the "Start" button is pressed, the chronometer transitions to this state. It starts counting time from zero and displays the elapsed time on the OLED screen.
+- `Start State`: When the "Start" button is pressed, the chronometer transitions to this state. It starts counting time from zero and displays the elapsed time on the OLED screen.
 
-Pause State: Pressing the "Pause" button in the "Start" state leads to this state. The elapsed time is frozen, and the paused time is displayed on the screen. The user can choose to resume or stop the chronometer from this state.
+- `Pause State`: Pressing the "Pause" button in the "Start" state leads to this state. The elapsed time is frozen, and the paused time is displayed on the screen. The user can choose to resume or stop the chronometer from this state.
 
-Resume State: Upon pressing the "Resume" button in the "Pause" state, the chronometer enters this state. The chronometer resumes counting time, adding the paused time to the total elapsed time. The OLED screen displays the updated elapsed time.
+- `Resume State`: Upon pressing the "Resume" button in the "Pause" state, the chronometer enters this state. The chronometer resumes counting time, adding the paused time to the total elapsed time. The OLED screen displays the updated elapsed time.
 
-Stop State: When the "Stop" button is pressed in any active state, the chronometer enters this state. The final elapsed time (or paused time if stopped from the "Pause" state) is displayed on the OLED screen.
+- `Stop State`: When the "Stop" button is pressed in any active state, the chronometer enters this state. The final elapsed time (or paused time if stopped from the "Pause" state) is displayed on the OLED screen.
 
-Transitions and Functionality:
+# Transitions and Functionality:
 
-In the "Init" state, the "Start" button transitions to the "Start" state, initializing the chronometer's start time.
-In the "Start" state, the "Pause" button pauses the chronometer, saving the current elapsed time. The "Stop" button stops the chronometer.
-In the "Pause" state, the "Resume" button resumes the chronometer from where it was paused. The "Stop" button stops the chronometer.
-In the "Resume" state, the "Pause" button pauses the chronometer again, saving the resumed time. The "Stop" button stops the chronometer.
-In the "Stop" state, the "Start" button resets the chronometer, returning to the "Init" state.
+- In the "Init" state, the "Start" button transitions to the "Start" state, initializing the chronometer's start time.
+- In the "Start" state, the "Pause" button pauses the chronometer, saving the current elapsed time. The "Stop" button stops the chronometer.
+- In the "Pause" state, the "Resume" button resumes the chronometer from where it was paused. The "Stop" button stops the chronometer.
+- In the "Resume" state, the "Pause" button pauses the chronometer again, saving the resumed time. The "Stop" button stops the chronometer.
+- In the "Stop" state, the "Start" button resets the chronometer, returning to the "Init" state.
+- 
 This FSM architecture ensures smooth and intuitive control of the chronometer's functionality through various states and button interactions.
 
-Contributing
+# Contributing
 Contributions to this project are welcome. If you find any issues or want to improve the driver, feel free to open an issue or submit a pull request.
 
-Credits
+# Credits
 This project was developed by [Lautaro Quarin] as part of the [PdM] course at [UBA].
