@@ -157,7 +157,7 @@ void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Presse
 
             if (btn2Pressed) {
                 currentState = CHRONOS_STATE_PAUSE;
-                pausedTime += currentTime - pausedAtTime;  //  Add paused time to pausedTime to account for time paused during the resume state.
+                pausedTime += currentTime - pausedAtTime;  // Add paused time to pausedTime
             }
             if (btn3Pressed) {
                 currentState = CHRONOS_STATE_STOP;
