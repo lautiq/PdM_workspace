@@ -188,7 +188,7 @@ void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Presse
 
 
             if (btn1Pressed) {
-                chronosFSM_init();	//Reset the chronometer.
+                chronosFSM_init();
                 pausedAtTime = 0;  // Reset paused time
                 commingFromPause = false;  // Reset pause flag.
             }

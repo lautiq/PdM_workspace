@@ -52,8 +52,6 @@ static void displayTimeOnScreen(uint64_t time) {
     chronosTime_t timeStruct;
     calculateElapsedTime(time, &timeStruct);
 
-    // Convert the time value into hours, minutes, and seconds format for display.
-    // for presenting the elapsed time accurately on the OLED screen.
     char timeStr[20];
     snprintf(timeStr, sizeof(timeStr), "%02u:%02u:%02u", timeStruct.hours, timeStruct.minutes, timeStruct.seconds);
     oledSetCursor(20, 40);
@@ -188,7 +186,7 @@ void chronosFSM_update(bool_t btn1Pressed, bool_t btn2Pressed, bool_t btn3Presse
 
 
             if (btn1Pressed) {
-                chronosFSM_init();	//Reset the chronometer.
+                chronosFSM_init();
                 pausedAtTime = 0;  // Reset paused time
                 commingFromPause = false;  // Reset pause flag.
             }
