@@ -1,4 +1,4 @@
-20:51:47 **** Incremental Build of configuration Debug for project TPF_PdM ****
+21:43:39 **** Incremental Build of configuration Debug for project TPF_PdM ****
 make -j16 all 
 arm-none-eabi-gcc "../Drivers/API/src/API_chronos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/lauta/Desktop/CESE/Materias/PdM/PdM_workspace/TPF_PdM/Drivers/API/inc" -I"C:/Users/lauta/Desktop/CESE/Materias/PdM/PdM_workspace/TPF_PdM/STM32F4xx_Nucleo_144" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/API/src/API_chronos.d" -MT"Drivers/API/src/API_chronos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/API/src/API_chronos.o"
 arm-none-eabi-gcc -o "TPF_PdM.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\lauta\Desktop\CESE\Materias\PdM\PdM_workspace\TPF_PdM\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TPF_PdM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -13,5 +13,5 @@ Finished building: default.size.stdout
 Finished building: TPF_PdM.list
  
 
-20:51:48 Build Finished. 0 errors, 0 warnings. (took 737ms)
+21:43:43 Build Finished. 0 errors, 0 warnings. (took 3s.392ms)
 

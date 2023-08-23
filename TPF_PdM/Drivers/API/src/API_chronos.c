@@ -15,8 +15,8 @@ static uint64_t startTime = 0;
 static uint64_t pausedTime = 0;
 static uint64_t elapsedTime = 0;
 static uint64_t pausedAtTime = 0;
-bool_t commingFromPause = false;
-bool_t stopFromPause = false;
+static bool_t commingFromPause = false;
+static bool_t stopFromPause = false;
 
 SSD1306_t ssd1306;
 
